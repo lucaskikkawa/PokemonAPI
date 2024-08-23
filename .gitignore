@@ -1,0 +1,40 @@
+# Ignore Visual Studio temporary files, build results, and
+# build logs.
+*.log
+*.obj
+*.exe
+*.bin
+*.dll
+*.pdb
+*.cache
+*.ilk
+*.pyc
+*.pyo
+*.lib
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Mono auto generated files
+mono_crash.*
+
+# Windows image file caches
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# VS Code directories
+.vscode/
+
+# Visual Studio 2019/2022
+.vs/
