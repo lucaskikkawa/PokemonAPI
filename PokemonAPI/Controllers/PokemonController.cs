@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PokemonAPI.Models;
+using PokemonAPI.Services.Exceptions;
 using PokemonAPI.Services.Interface;
 
 namespace PokemonAPI.Controllers
@@ -12,26 +12,28 @@ namespace PokemonAPI.Controllers
     {
         private readonly IPokemonService _pokemonService;
 
-        public PokemonController(IPokemonService PokemonService)
+        public PokemonController(IPokemonService pokemonService)
         {
-            _pokemonService = PokemonService;
+            _pokemonService = pokemonService;
         }
 
         /// <summary>
         /// Busca Pokemon pelo nome
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>    
-
-
-        // TODO: Implementar método GetByName
-
+        /// <param name="nome"></param>
+        /// <returns></returns>
         [HttpGet("getbyname")]
-        public async Task<IActionResult> GetByName([FromQuery]string nome)
+        public async Task<IActionResult> GetByName([FromQuery] string nome)
         {
-            var ret = await _pokemonService.GetByName(nome);
-            return Ok(ret);
+            try
+            {
+                var ret = await _pokemonService.GetByName(nome);
+                return Ok(ret);
+            }
+            catch (PokemonNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
-
     }
 }

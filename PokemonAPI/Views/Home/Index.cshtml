@@ -1,15 +1,61 @@
-﻿@{
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Pokemon API</h1>
+    <p>Busque um pokemon pelo nome usando a PokéAPI.</p>
 </div>
 
-<form method="get" action="/api/pokemon/getbyname">
+<form id="pokemon-form">
     <label for="pokemonName">Nome do Pokémon:</label>
-    <input type="text" id="pokemonName" name="nome" placeholder="Digite o nome do Pokémon">
+    <input type="text" id="pokemonName" name="nome" placeholder="Digite o nome do Pokémon" required>
     <button type="submit">Buscar Pokémon</button>
 </form>
 
+<div id="pokemon-message" style="margin-top: 16px;"></div>
+<pre id="pokemon-result" style="margin-top: 16px; text-align: left; white-space: pre-wrap;"></pre>
+
+<script>
+    const form = document.getElementById("pokemon-form");
+    const input = document.getElementById("pokemonName");
+    const message = document.getElementById("pokemon-message");
+    const result = document.getElementById("pokemon-result");
+
+    form.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const nome = input.value.trim();
+        if (!nome) {
+            return;
+        }
+
+        message.textContent = "";
+        result.textContent = "";
+
+        try {
+            const response = await fetch(`/api/pokemon/getbyname?nome=${encodeURIComponent(nome)}`);
+
+            if (!response.ok) {
+                const errorMessage = await response.text();
+                message.textContent = errorMessage;
+                message.style.color = "red";
+                input.focus();
+                input.select();
+                return;
+            }
+
+            const data = await response.json();
+            message.textContent = "Pokemon encontrado com sucesso.";
+            message.style.color = "green";
+            result.textContent = JSON.stringify(data, null, 2);
+            input.focus();
+            input.select();
+        } catch (error) {
+            message.textContent = "Ocorreu um erro ao buscar o pokemon.";
+            message.style.color = "red";
+            input.focus();
+            input.select();
+        }
+    });
+</script>

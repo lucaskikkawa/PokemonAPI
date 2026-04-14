@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
 using PokemonAPI.Models;
+using PokemonAPI.Services.Exceptions;
 using PokemonAPI.Services.Interface;
 using System.Net.Http;
 
@@ -22,6 +23,11 @@ namespace PokemonAPI.Services
 
             // Faz a requisição HTTP GET
             HttpResponseMessage response = await _httpClient.GetAsync(url);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                throw new PokemonNotFoundException("Este pokemon não existe em nosso banco de dados");
+            }
 
             // Verifica se a resposta foi bem-sucedida
             response.EnsureSuccessStatusCode();
